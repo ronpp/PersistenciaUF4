@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_db_m06
+    ports:
+      - 33060:33060
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: uf4_db
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypass
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      
+volumes:
+  mysql:
