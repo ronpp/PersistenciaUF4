@@ -4,13 +4,13 @@ ALTER DATABASE uf4_db CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 # CREATE DATABASE SCHEMA
 CREATE TABLE IF NOT EXISTS categories (
-    category_id INT UNSIGNED AUTO_INCREMENT,
+    category_id INT  AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY(category_id)
 );
 
 CREATE TABLE IF NOT EXISTS authors (
-    author_id INT UNSIGNED AUTO_INCREMENT,
+    author_id INT AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
     description VARCHAR(1000),
     PRIMARY KEY(author_id)
@@ -18,16 +18,16 @@ CREATE TABLE IF NOT EXISTS authors (
 
 
 CREATE TABLE IF NOT EXISTS books (
-    book_id INT UNSIGNED AUTO_INCREMENT,
-    title VARCHAR(50) NOT NULL,
+    book_id INT AUTO_INCREMENT,
+    title VARCHAR(100) NOT NULL,
     isbn VARCHAR(20) NOT NULL UNIQUE,
-    author_id INT UNSIGNED,
-    category_id INT UNSIGNED NOT NULL,
-    publication_date VARCHAR(20),
+    author_id INT ,
+    category_id INT ,
+    publication_date VARCHAR(30),
     edition VARCHAR(15) DEFAULT '1ra Edition',
-    pages VARCHAR(4) NOT NULL,
-    quantity SMALLINT UNSIGNED DEFAULT 0, 
-    price DECIMAL(5,2) UNSIGNED NOT NULL,
+    pages VARCHAR(4),
+    quantity SMALLINT  DEFAULT 0, 
+    price DECIMAL(5,2) ,
     PRIMARY KEY(book_id),
     FOREIGN KEY(author_id) REFERENCES authors(author_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(category_id) REFERENCES categories(category_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS books (
 
 
 CREATE TABLE IF NOT EXISTS customers (
-    customer_id INT UNSIGNED AUTO_INCREMENT,
+    customer_id INT  AUTO_INCREMENT,
     name  VARCHAR(50) NOT NULL,
     lastname VARCHAR(50) NOT NULL,
     address VARCHAR(80)  NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS customers (
 
 
 CREATE TABLE IF NOT EXISTS librarians (
-    librarian_id INT UNSIGNED AUTO_INCREMENT,
+    librarian_id INT  AUTO_INCREMENT,
     name  VARCHAR(50) NOT NULL,
     lastname VARCHAR(50) NOT NULL,
     address VARCHAR(80),
@@ -62,9 +62,9 @@ CREATE TABLE IF NOT EXISTS librarians (
 CREATE TABLE IF NOT EXISTS loans(
     loan_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     loan_end_date DATETIME NOT NULL,
-    customer_id INT UNSIGNED NOT NULL,
-    book_id INT UNSIGNED NOT NULL,
-    librarian_id INT UNSIGNED,
+    customer_id INT  NOT NULL,
+    book_id INT  NOT NULL,
+    librarian_id INT ,
     FOREIGN KEY(customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(book_id) REFERENCES books(book_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (customer_id, book_id)
@@ -120,7 +120,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-409-02980-6',
     (SELECT author_id FROM authors WHERE name = 'Jerome Gabillaud'), 
     (SELECT category_id FROM categories WHERE name = 'Base de Datos'),
-    'Abril 2021',
+    'Abril 2021'
     '498',
     4,
     22,53);
@@ -130,7 +130,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-7460-9667-7',
     (SELECT author_id FROM authors WHERE name = 'Jerome Gabillaud'), 
     (SELECT category_id FROM categories WHERE name = 'Base de Datos'),
-    'Julio 2015',
+    'Julio 2015'
     '551',
     7,
     19,76);
@@ -150,7 +150,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-409-03309-4',
     (SELECT author_id FROM authors WHERE name = 'Olivier Heurtel'), 
     (SELECT category_id FROM categories WHERE name = 'Desarrollo'),
-    'Octubre 2021',
+    'Octubre 2021'
     '658',
      5,
      22,53);
@@ -161,7 +161,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, edition
     '978-2-409-02434-4',
     (SELECT author_id FROM authors WHERE name = 'Olivier Heurtel'), 
     (SELECT category_id FROM categories WHERE name = 'Desarrollo'),
-    'Febrero 2020',
+    'Febrero 2020'
     '4ta Edition',
     '794',
     4,
@@ -173,7 +173,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-409-01447-5',
     (SELECT author_id FROM authors WHERE name = 'Sylvain Hebuterne'), 
     (SELECT category_id FROM categories WHERE name = 'Desarrollo'),
-    'Junio 2018',
+    'Junio 2018'
     '508',
     15,
     25,25);
@@ -184,7 +184,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-7460-0934-8',
     (SELECT author_id FROM authors WHERE name = 'Thierry Groussard'), 
     (SELECT category_id FROM categories WHERE name = 'Desarrollo'),
-    'Diciembre 2014',
+    'Diciembre 2014'
     '500',
      25,
      19,76);
@@ -195,7 +195,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-7460-0821-3',
     (SELECT author_id FROM authors WHERE name = 'Thierry Groussard'), 
     (SELECT category_id FROM categories WHERE name = 'Desarrollo'),
-    'Junio 2013',
+    'Junio 2013'
     '580',
      3,
     17,92);
@@ -205,7 +205,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-7460-0804-9',
     (SELECT author_id FROM authors WHERE name = 'Thierry Groussard'), 
     (SELECT category_id FROM categories WHERE name = 'Desarrollo'),
-    'Marzo 2013',
+    'Marzo 2013'
     '639',
      3,
     17,92);
@@ -215,8 +215,8 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-409-03388-9',
     (SELECT author_id FROM authors WHERE name = 'Philippe Banquet'), 
     (SELECT category_id FROM categories WHERE name = 'Sistemas y Redes'),
-    'Febrero 2022',
-    '4ta Edicion'
+    'Febrero 2022'
+    '4ta Edicion',
     '899',
      20,
      36,75);
@@ -227,8 +227,8 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-409-03536-4',
     (SELECT author_id FROM authors WHERE name = 'Philippe Banquet'), 
     (SELECT category_id FROM categories WHERE name = 'Sistemas y Redes'),
-    'Marzo 2022',
-    '4ta Edicion'
+    'Marzo 2022'
+    '4ta Edicion',
     '796',
      20,
      25,25);
@@ -239,7 +239,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-409-02921-9',
     (SELECT author_id FROM authors WHERE name = 'Jose Dordoigne'), 
     (SELECT category_id FROM categories WHERE name = 'Sistemas y Redes'),
-    'Enero 2021',
+    'Enero 2021'
     '3ra Edicion',
     '638',
      10,
@@ -253,7 +253,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-409-01847-3',
     (SELECT author_id FROM authors WHERE name = 'Nicolas Bonnet'), 
     (SELECT category_id FROM categories WHERE name = 'Sistemas y Redes'),
-    'Febrero 2019',
+    'Febrero 2019'
     '2da Edicion',
     '796 ',
     15,
@@ -265,7 +265,7 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
     '978-2-409-01217-4',
     (SELECT author_id FROM authors WHERE name = 'Nicolas Bonnet'), 
     (SELECT category_id FROM categories WHERE name = 'Sistemas y Redes'),
-    'Diciembre 2017',
+    'Diciembre 2017'
     '500',
      4,
     36,75);
@@ -291,4 +291,4 @@ INSERT INTO books(title, isbn, author_id, category_id, publication_date, pages, 
         (SELECT customer_id FROM customers WHERE name = 'Montserrat'),
         (SELECT book_id FROM books WHERE title = 'C# 5')
     );
-Montserrat
+
