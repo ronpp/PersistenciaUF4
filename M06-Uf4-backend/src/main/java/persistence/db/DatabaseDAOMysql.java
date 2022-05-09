@@ -1,17 +1,20 @@
 package persistence.db;
 
+import persistence.db.mapper.ResultSetToBook;
 import persistence.models.Book;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class DatabaseDAOMysql implements DatabaseDAO{
 
+    private final ResultSetToBook mapper = new ResultSetToBook();
 
     @Override
     public Stream<Book> listAllBooks() {
@@ -21,19 +24,7 @@ public class DatabaseDAOMysql implements DatabaseDAO{
             PreparedStatement pst = conn.prepareStatement(SQL_QUERY);
             ResultSet rs = pst.executeQuery()) {
             while (rs.next()){
-                Book book = Book.builder()
-                        .book_id(rs.getInt("book_id"))
-                        .title(rs.getString("title"))
-                        .isbn(rs.getString("isbn"))
-                        .author_id(rs.getInt("author_id"))
-                        .category_id(rs.getInt("category_id"))
-                        .publication_date(rs.getString("publication_date"))
-                        .edition(rs.getString("edition"))
-                        .pages(rs.getString("pages"))
-                        .quantity(rs.getInt("quantity"))
-                        .price(rs.getDouble("price"))
-                        .build();
-                bookList.add(book);
+                bookList.add(mapper.map(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,19 +42,26 @@ public class DatabaseDAOMysql implements DatabaseDAO{
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             while (rs.next()){
-                book = Book.builder()
-                        .book_id(rs.getInt("book_id"))
-                        .title(rs.getString("title"))
-                        .isbn(rs.getString("isbn"))
-                        .author_id(rs.getInt("author_id"))
-                        .category_id(rs.getInt("category_id"))
-                        .publication_date(rs.getString("publication_date"))
+                book = mapper.map(rs);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.ofNullable(book);
+    }
 
-                        .edition(rs.getString("edition"))
-                        .pages(rs.getString("pages"))
-                        .quantity(rs.getInt("quantity"))
-                        .price(rs.getDouble("price"))
-                        .build();
+    @Override
+    public Optional<Book> findBookByIsbn(String isbn) {
+        String SQL_QUERY = "SELECT * FROM books WHERE isbn = ?";
+        Book book = null;
+        try(Connection conn = MySqlDataSource.getConnection();
+            PreparedStatement pst = conn.prepareStatement(SQL_QUERY)) {
+
+            pst.setString(1, isbn);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()){
+                book = mapper.map(rs);
             }
             rs.close();
         } catch (SQLException e) {
@@ -74,44 +72,47 @@ public class DatabaseDAOMysql implements DatabaseDAO{
 
     @Override
     public Stream<Book> addBook(Book book) {
+        String SQL_QUERY = "INSERT INTO books(title, isbn, author_id, category_id, publication_date, edition, pages, quantity, price)" +
+                " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        int row = 0;
+        try(Connection conn = MySqlDataSource.getConnection();
+            PreparedStatement pst = conn.prepareStatement(SQL_QUERY)) {
+
+            pst.setString(1, book.getTitle());
+            pst.setString(2, book.getIsbn());
+            pst.setInt(3, book.getAuthor_id());
+            pst.setInt(4, book.getCategory_id());
+            pst.setString(5, book.getPublication_date());
+            pst.setString(6, book.getEdition());
+            pst.setString(7, book.getPages());
+            pst.setInt(8, book.getQuantity());
+            pst.setDouble(9, book.getPrice());
+            row  = pst.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+       if(row != 0){
+           return Stream.of(findBookByIsbn(book.getIsbn()).get());
+       }
         return null;
     }
 
 
-    public static  Map<String, String> testUpdate(){
-        String sql_query = "";
-        Scanner sc = new Scanner(System.in);
-        Map<String, String> bookFields = new HashMap<>();
-        bookFields.put("title", "");
-        bookFields.put("isbn", "");
-        bookFields.put("publication_date", "");
-        bookFields.put("edition", "");
-        System.out.println("Que campo quieres modificar: ");
-        bookFields.forEach((key, value) -> System.out.print("-" + key + " "));
-        System.out.print("\nfield: ");
-        String field = sc.next();
-        System.out.print("\nvalue: ");
-        String value = sc.next();
-        bookFields.put(field,value);
-
-        return bookFields.entrySet().stream()
-                .filter(entry -> !entry.getValue().equals(""))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
     @Override
     public void updateBook(int id) {
-        String SQL_QUERY = "UPDATE books SET " + "WHERE book_id = ?";
-        int row  = 0;
-        try (Connection conn = MySqlDataSource.getConnection();
-             PreparedStatement pst = conn.prepareStatement(SQL_QUERY)){
-            pst.setInt(1, id);
-
-            row = pst.executeUpdate();
-            System.out.println("deleted rows: " + row);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // TODO: Pending to finish
+//        String SQL_QUERY = "UPDATE books SET " + "WHERE book_id = ?";
+//        int row  = 0;
+//        try (Connection conn = MySqlDataSource.getConnection();
+//             PreparedStatement pst = conn.prepareStatement(SQL_QUERY)){
+//            pst.setInt(1, id);
+//
+//            row = pst.executeUpdate();
+//            System.out.println("deleted rows: " + row);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
     }
 

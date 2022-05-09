@@ -1,10 +1,5 @@
 import persistence.db.DatabaseDAO;
 import persistence.db.DatabaseDAOMysql;
-import persistence.models.Book;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 public class Main {
@@ -23,21 +18,10 @@ public class Main {
 //            System.out.println("El libro no existe");
 //        }
 //
-//        System.out.println("\nALL BOOKS AFTER DELETE:");
-//        db.deleteBook(id);
-//        db.listAllBooks().forEach(System.out::println);
+        System.out.println("\nALL BOOKS AFTER DELETE:");
+        db.deleteBook(23);
+        db.listAllBooks().forEach(System.out::println);
 
-        Map<String, String>bookFields = new HashMap<>();
-        bookFields.put("book_id", "");
-        bookFields.put("title", "titulo de ejemplo");
-        bookFields.put("isbn", "");
-        bookFields.put("author_id", "1");
-        bookFields.put("category_id", "2");
-        bookFields.put("publication_date", "25 enero");
-        bookFields.put("edition", "");
-        bookFields.put("pages", "");
-        bookFields.put("quantity", "");
-        bookFields.put("price", "");
 
 //
 //        Map<String, String>booksFiltered = bookFields.entrySet().stream()
@@ -48,9 +32,19 @@ public class Main {
 //        booksFiltered.put("title","hola");
 //        System.out.println(booksFiltered.get("title"));
 
-        System.out.println( DatabaseDAOMysql.testUpdate());
 
-
+//        Book newBook = Book.builder()
+//                .title("Excel para todos")
+//                .isbn("978-2-509-02978-9")
+//                .author_id(6)
+//                .category_id(5)
+//                .publication_date("abril")
+//                .edition("2da edicion")
+//                .pages("550")
+//                .quantity(25)
+//                .price(25.46)
+//                .build();
+//        db.addBook(newBook).forEach(System.out::println);
 
     }
 }

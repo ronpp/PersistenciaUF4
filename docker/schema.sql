@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS books (
     category_id INT ,
     publication_date VARCHAR(30),
     edition VARCHAR(15) DEFAULT '1ra Edition',
-    pages VARCHAR(4),
+    pages VARCHAR(20),
     quantity SMALLINT  DEFAULT 0, 
     price DECIMAL(5,2) ,
     PRIMARY KEY(book_id),
