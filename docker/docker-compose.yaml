@@ -14,6 +14,16 @@ services:
     volumes:
       - mysql:/var/lib/mysql
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db_m06
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+
       
 volumes:
   mysql:
+  mongo:

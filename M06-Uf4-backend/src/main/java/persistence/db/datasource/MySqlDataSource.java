@@ -1,4 +1,4 @@
-package persistence.db;
+package persistence.db.datasource;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

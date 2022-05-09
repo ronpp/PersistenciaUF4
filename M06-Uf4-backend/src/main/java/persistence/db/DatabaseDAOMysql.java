@@ -1,5 +1,6 @@
 package persistence.db;
 
+import persistence.db.datasource.MySqlDataSource;
 import persistence.db.mapper.ResultSetToBook;
 import persistence.models.Book;
 
@@ -19,7 +20,7 @@ public class DatabaseDAOMysql implements DatabaseDAO{
     @Override
     public Stream<Book> listAllBooks() {
         String SQL_QUERY = "SELECT * FROM books";
-        List<Book> bookList =  new ArrayList<>();;
+        List<Book> bookList =  new ArrayList<>();
         try(Connection conn = MySqlDataSource.getConnection();
             PreparedStatement pst = conn.prepareStatement(SQL_QUERY);
             ResultSet rs = pst.executeQuery()) {
@@ -102,17 +103,6 @@ public class DatabaseDAOMysql implements DatabaseDAO{
     @Override
     public void updateBook(int id) {
         // TODO: Pending to finish
-//        String SQL_QUERY = "UPDATE books SET " + "WHERE book_id = ?";
-//        int row  = 0;
-//        try (Connection conn = MySqlDataSource.getConnection();
-//             PreparedStatement pst = conn.prepareStatement(SQL_QUERY)){
-//            pst.setInt(1, id);
-//
-//            row = pst.executeUpdate();
-//            System.out.println("deleted rows: " + row);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
 
     }
 
